@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
 import { Container, Form, Button, Segment } from 'semantic-ui-react';
 
 class Login extends Component {
@@ -7,7 +8,7 @@ class Login extends Component {
     this.state = {
       email: null,
       password: null,
-      remember: false
+      save: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -18,21 +19,28 @@ class Login extends Component {
   render() {
     return (
       <Container >
-        <Segment inverted color='brown'>
+        <Segment inverted color='black'>
           <Form onSubmit={this.onSubmit} inverted>
             <Form.Group widths='equal'>
               <Form.Input
                 name='email'
+                type='email'
                 value={this.state.email}
                 placeholder='Email'
                 onChange={this.onChange} />
               <Form.Input
                 name='password'
+                type='password'
                 value={this.state.password}
                 placeholder='Password'
                 onChange={this.onChange} />
             </Form.Group>
-            <Form.Checkbox label='remember me' />
+            <Form.Input
+              name='save'
+              type='checkbox'
+              value={this.state.save}
+              label='Remember me'
+              onChange={this.onChange} />
             <Button type='submit'>Log In</Button>
           </Form>
         </Segment>
@@ -41,18 +49,30 @@ class Login extends Component {
   }
 
   onChange(event) {
+    let name = event.target.name;
+    let value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
     this.setState({
-      [event.target.name]: event.target.value
+      [name]: value
     });
   }
 
   onSubmit() {
-    alert(this.state.email + ' ' + this.state.password + ' ' + this.state.remember.toString());
     this.setState({
-      email: null,
-      password: null
+      email: '',
+      password: ''
     });
+
+    let user = {
+      email: this.state.email,
+      password: this.state.password
+    };
+    this.props.onLoginSuccess(user);
   }
 }
+
+Login.propTypes = {
+  user : PropTypes.bool,
+  onLoginSuccess : PropTypes.func
+};
 
 export default Login;

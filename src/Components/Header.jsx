@@ -1,18 +1,36 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Menu } from 'semantic-ui-react';
 
 class Header extends Component {
+  constructor(props) {
+    super(props);
+    
+    this.onLogout = this.onLogout.bind(this);
+  }
+  
+
   render() {
     return (
       <div>
-        <h2>Welcome to React Router Tutorial</h2>
-        <ul>
-          <li><Link to={'/'}>Home</Link></li>
-          <li><Link to={'/Login'}>Login</Link></li>
-          <li><Link to={'/Signup'}>Signup</Link></li>
-        </ul>
+        <header>
+          <Menu inverted>
+            <Menu.Menu position='left'>
+              <Menu.Item header as={ Link } to='Home'>Home</Menu.Item>
+            </Menu.Menu>
+            <Menu.Menu position='right'>
+              <Menu.Item header as={ Link } to='Login'>Log In</Menu.Item>
+              <Menu.Item header as={ Link } to='Signup'>Sign Up</Menu.Item>
+              <Menu.Item onClick={this.onLogout}>Log Out</Menu.Item>
+            </Menu.Menu>
+          </Menu>
+        </header>
       </div>
     );
+  }
+
+  onLogout() {
+    
   }
 }
 

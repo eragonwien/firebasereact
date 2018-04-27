@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
 
 class Home extends Component {
   render() {
     return (
-      <div>
-        <h1>HOME</h1>
-      </div>
+      
     );
   }
 }
+
+Home.propTypes = {
+  user: PropTypes.object
+};
+
 
 export default Home;
