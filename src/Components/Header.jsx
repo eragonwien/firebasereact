@@ -21,7 +21,7 @@ class Header extends Component {
             <Menu.Menu position='right'>
               <Menu.Item header as={ Link } to='Login'>Log In</Menu.Item>
               <Menu.Item header as={ Link } to='Signup'>Sign Up</Menu.Item>
-              <Menu.Item onClick={this.onLogout}>Log Out</Menu.Item>
+              <Menu.Item header as={ Link } to='Logout'>Log Out</Menu.Item>
             </Menu.Menu>
           </Menu>
         </header>
