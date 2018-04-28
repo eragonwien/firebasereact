@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
+import { auth } from '../firebase/firebase';
 
 class Home extends Component {
 
@@ -13,17 +14,22 @@ class Home extends Component {
   
 
   componentDidMount() {
-    let user = localStorage.getItem('user');
-    this.setState({
-      user: JSON.parse(user)
+    this.subscription = auth.onAuthStateChanged((user) => {
+      this.setState({
+        user: user
+      });
     });
   }
 
+  componentWillUnmount() {
+    this.subscription();
+  }
+
   render() {
-    let email = (this.state.user) ? this.state.user.email : 'Guest';
     return (
       <main>
-        <h1>Hello {email}</h1>
+        <h1>Hello</h1>
+        <pre>{JSON.stringify(this.state.user, null, 3)}</pre>
       </main>
     );
   }

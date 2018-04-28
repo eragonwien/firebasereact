@@ -6,6 +6,8 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      email: '',
+      password: '',
       success: false
     };
 
@@ -56,8 +58,8 @@ class Login extends Component {
     });
   }
 
-  onSubmit() {
-
+  onSubmit(event) {
+    event.preventDefault();
     // validate
     let success = true;
     let user = {};

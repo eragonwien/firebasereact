@@ -1,23 +1,41 @@
 import React, { Component } from 'react';
-import { Container, Form, Button, Segment } from 'semantic-ui-react';
+import { Container, Form, Button, Segment, Message } from 'semantic-ui-react';
+import { Redirect } from 'react-router-dom';
+import { auth } from '../firebase/firebase';
 
 class Signup extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      email: '',
+      password: '',
+      success: false,
+      message: {
+        header: '',
+        contents: []
+      }
+    };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.getMessage = this.getMessage.bind(this);
   }
 
   render() {
+    if (this.state.success) {
+      return <Redirect to='/Login' />;
+    }
+
+    let message = this.getMessage();
+
     return (
       <main>
         <Container >
+          {message}
           <Segment inverted color='black'>
             <Form onSubmit={this.onSubmit} inverted>
-              <Form.Group widths={2} unstackable>
+              <Form.Group widths='equal'>
                 <Form.Input
                   name='email'
                   type='email'
@@ -29,20 +47,6 @@ class Signup extends Component {
                   type='password'
                   value={this.state.password}
                   placeholder='Password'
-                  onChange={this.onChange} />
-              </Form.Group>
-              <Form.Group widths={2}>
-                <Form.Input
-                  name='firstname'
-                  type='text'
-                  value={this.state.firstname}
-                  placeholder='Firstname'
-                  onChange={this.onChange} />
-                <Form.Input
-                  name='lastname'
-                  type='text'
-                  value={this.state.lastname}
-                  placeholder='Lastname'
                   onChange={this.onChange} />
               </Form.Group>
               <Button type='submit'>Create</Button>
@@ -61,8 +65,45 @@ class Signup extends Component {
     });
   }
 
-  onSubmit() {
-    alert(JSON.stringify(this.state));
+  onSubmit(event) {
+    event.preventDefault();
+    let {email, password, success} = this.state;
+    let message = {
+      header: '',
+      contents: []
+    };
+    auth.createUserWithEmailAndPassword(email, password).then(() => {
+      success = true;
+      message.header = 'Submission error';
+      message.contents.push('Account created');
+    }).catch((error) => {
+      let errorMessage = error.code + ': ' + error.message;
+      message.header = 'Submission error';
+      message.contents.push(errorMessage);
+      success = false;
+    }).finally(() => {
+      this.setState({
+        email: '',
+        password: '',
+        success: success,
+        message: message
+      });
+    });
+  }
+
+  getMessage() {
+
+    let message = this.state.message;
+    let color = (this.state.success) ? 'green' : 'red';
+    if (!message || !message.header) {
+      return null;
+    }
+    return (
+      <Message color={color}>
+        <Message.Header>{message.header}</Message.Header>
+        <Message.List items={message.contents} />
+      </Message>
+    );
   }
 }
 
