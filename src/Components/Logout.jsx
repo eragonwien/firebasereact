@@ -29,9 +29,7 @@ class Logout extends Component {
     if (this.state.success) {
       return <Redirect to='/Home' />;
     }
-    if (this.state.success) {
-      return <Redirect to='/Login' />;
-    }
+
     let message = this.getMessage();
     return (
       <main>

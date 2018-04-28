@@ -12,7 +12,6 @@ class Home extends Component {
     };
   }
   
-
   componentDidMount() {
     this.subscription = auth.onAuthStateChanged((user) => {
       this.setState({

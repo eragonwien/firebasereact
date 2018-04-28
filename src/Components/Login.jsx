@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Container, Form, Button, Segment } from 'semantic-ui-react';
+import { Container, Form, Button, Segment, Message } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
+import { auth } from '../firebase/firebase';
 
 class Login extends Component {
   constructor(props) {
@@ -8,11 +9,16 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      success: false
+      success: false,
+      message: {
+        header: '',
+        contents: []
+      }
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.getMessage = this.getMessage.bind(this);
   }
   
 
@@ -22,9 +28,12 @@ class Login extends Component {
       return <Redirect to='/' />;
     }
 
+    let message = this.getMessage();
+
     return (
       <main>
         <Container >
+          {message}
           <Segment inverted color='black'>
             <Form onSubmit={this.onSubmit} inverted>
               <Form.Group widths='equal'>
@@ -60,18 +69,41 @@ class Login extends Component {
 
   onSubmit(event) {
     event.preventDefault();
-    // validate
-    let success = true;
-    let user = {};
-    user.email = this.state.email;
-    user.password = this.state.password;
-    localStorage.setItem('user', JSON.stringify(user));
-    // clean up
-    this.setState({
-      email: '',
-      password: '',
-      success: success
+    let {email, password, success} = this.state;
+    let message = {
+      header: '',
+      contents: []
+    };
+
+    // sign in to firebase
+    auth.signInWithEmailAndPassword(email, password).then(() => {
+      success = true;
+    }).catch((error) => {
+      success = false;
+      message.header = 'Login Error';
+      let errorMessage = error.code + ': ' + error.message;
+      message.contents.push(errorMessage);
+    }).finally(() => {
+      this.setState({
+        success: success,
+        message: message
+      });
     });
+  }
+
+  getMessage() {
+
+    let message = this.state.message;
+    let color = (this.state.success) ? 'green' : 'red';
+    if (!message || !message.header) {
+      return null;
+    }
+    return (
+      <Message color={color}>
+        <Message.Header>{message.header}</Message.Header>
+        <Message.List items={message.contents} />
+      </Message>
+    );
   }
 }
 
