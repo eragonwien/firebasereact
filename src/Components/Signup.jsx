@@ -33,7 +33,7 @@ class Signup extends Component {
       <main>
         <Container >
           {message}
-          <Segment inverted color='black'>
+          <Segment inverted color='orange'>
             <Form onSubmit={this.onSubmit} inverted>
               <Form.Group widths='equal'>
                 <Form.Input
@@ -49,7 +49,7 @@ class Signup extends Component {
                   placeholder='Password'
                   onChange={this.onChange} />
               </Form.Group>
-              <Button type='submit'>Create</Button>
+              <Button type='submit' inverted>Create</Button>
             </Form>
           </Segment>
         </Container>

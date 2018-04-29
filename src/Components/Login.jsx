@@ -34,7 +34,7 @@ class Login extends Component {
       <main>
         <Container >
           {message}
-          <Segment inverted color='black'>
+          <Segment inverted color='orange'>
             <Form onSubmit={this.onSubmit} inverted>
               <Form.Group widths='equal'>
                 <Form.Input
@@ -50,7 +50,6 @@ class Login extends Component {
                   placeholder='Password'
                   onChange={this.onChange} />
               </Form.Group>
-              <Form.Checkbox label='remember me' />
               <Button type='submit'>Log In</Button>
             </Form>
           </Segment>

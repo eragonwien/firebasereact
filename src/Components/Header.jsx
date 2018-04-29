@@ -31,11 +31,11 @@ class Header extends Component {
     return (
       <div>
         <header>
-          <Menu inverted>
-            <Menu.Menu position='left'>
+          <Menu inverted stackable color='orange'>
+            <Menu.Menu position='left' stackable>
               <Menu.Item header as={ Link } to='Home'>Home</Menu.Item>
             </Menu.Menu>
-            <Menu.Menu position='right'>
+            <Menu.Menu position='right'stackable>
               <Menu.Item header as={ Link } to='Signup'>Sign Up</Menu.Item>
               {userControls}
             </Menu.Menu>
