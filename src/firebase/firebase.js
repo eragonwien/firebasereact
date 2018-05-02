@@ -17,8 +17,12 @@ const auth = firebase.auth();
 
 const storage = firebase.storage();
 
+const rootRef = firebase.database().ref();
+const heroesRef = rootRef.child('heroes');
+
 export {
   auth,
   firebase,
-  storage
+  storage,
+  heroesRef
 };
