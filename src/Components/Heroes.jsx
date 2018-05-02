@@ -6,26 +6,33 @@ class Heroes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      heroes: null,
+      heroes: [],
       loading: true
     };
 
     this.heroesListing = this.heroesListing.bind(this);
+    this.addHeroToList = this.addHeroToList.bind(this);
+    this.updateHeroInList = this.updateHeroInList.bind(this);
+    this.removeHeroFromList = this.removeHeroFromList.bind(this);
   }
   
 
   componentDidMount() {
-    heroesRef.orderByKey().on('value', (snap) => {
-      const heroes = snap.val();
-      this.setState({
-        heroes,
-        loading: false
-      });
+    heroesRef.on('child_added', (data) => {
+      this.addHeroToList(data.key, data.val());
+    });
+    heroesRef.on('child_changed', (data) => {
+      this.updateHeroInList(data.key, data.val());
+    });
+    heroesRef.on('child_removed', (data) => {
+      this.removeHeroFromList(data.key);
     });
   }
 
   componentWillUnmount() {
-    heroesRef.off('value');
+    heroesRef.off('child_added');
+    heroesRef.off('child_changed');
+    heroesRef.off('child_removed');
   }
 
   render() {
@@ -51,13 +58,44 @@ class Heroes extends Component {
 
   heroesListing() {
     const {heroes} = this.state;
-    let listing = Object.keys(heroes).map((key) => {
-      const hero = heroes[key];
+    let listing = heroes.map((hero) => {
       return (
-        <li key={key}><Link to={'/heroes/' + key} >{hero.firstname} {hero.lastname}</Link></li>
+        <li key={hero.id}>
+          <Link to={'/heroes/' + hero.id}>{hero.secret}</Link>
+        </li>
       );
     });
     return listing;
+  }
+
+  addHeroToList(heroId, hero) {
+    hero.id = heroId;
+    let {heroes} = this.state;
+    heroes.push(hero);
+    this.setState({
+      heroes,
+      loading: false
+    });
+  }
+
+  updateHeroInList(heroId, updatedValue) {
+    let {heroes} = this.state;
+    const heroIndex = heroes.findIndex( hero => hero.id === heroId);
+    let hero = updatedValue;
+    hero.id = heroId;
+    heroes[heroIndex] = hero;
+    this.setState({
+      heroes
+    }); 
+  }
+
+  removeHeroFromList(heroId) {
+    let {heroes} = this.state;
+    const heroIndex = heroes.findIndex( hero => hero.id === heroId);
+    heroes.splice(heroIndex, 1);
+    this.setState({
+      heroes
+    }); 
   }
 }
 

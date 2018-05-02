@@ -25,7 +25,7 @@ class Signup extends Component {
   }
 
   componentWillUnmount() {
-    this.subscription();
+    this.subscription = undefined;
   }
 
   render() {
